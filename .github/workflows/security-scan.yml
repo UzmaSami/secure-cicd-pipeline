@@ -67,11 +67,11 @@ jobs:
           fetch-depth: 0
 
       - name: Run TruffleHog Secrets Scan
-        uses: trufflesecurity/trufflehog@main
+       uses: trufflesecurity/trufflehog@main
         with:
           path: ./
-          base: main
-          head: HEAD
+          base: ""
+          head: ${{ github.sha }}
           extra_args: --debug --only-verified
 
   # ----------------------------------------
