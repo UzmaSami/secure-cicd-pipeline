@@ -107,7 +107,7 @@ jobs:
           output: reports/trivy-results.sarif
 
       - name: Upload Trivy Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: trivy-security-report
           path: reports/trivy-results.sarif
