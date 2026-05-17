@@ -1,38 +1,20 @@
-# ================================================
-# Secure Dockerfile - Security Best Practices
-# ================================================
+# Use the official, lightweight Python 3.13 image
+FROM python:3.13-slim
 
-# Use specific version - never use 'latest'
-FROM python:3.11-slim
-
-# Security - Create non-root user
-RUN groupadd -r appuser && \
-    useradd -r -g appuser appuser
-
-# Set working directory
+# Set a secure working directory inside the container
 WORKDIR /app
 
-# Copy requirements first (better caching)
+# Copy the requirements file first (this makes future builds faster)
 COPY app/requirements.txt .
 
-# Install dependencies
+# Install dependencies securely without caching junk files
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
+# Copy the actual application code into the container
 COPY app/ .
 
-# Security - Set file ownership
-RUN chown -R appuser:appuser /app
-
-# Security - Switch to non-root user
-USER appuser
-
-# Security - Don't expose unnecessary ports
+# Expose port 5000 for the Flask app
 EXPOSE 5000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
-    CMD python -c "import requests; requests.get('http://localhost:5000/health')"
-
-# Run application
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "main:app"]
+# Command to run the application when the container starts
+CMD ["python", "main.py"]
